@@ -25,7 +25,3 @@ jobs:
           context: .
           push: true
           tags: ningdie/openclaw-cn:latest
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/openclaw:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64

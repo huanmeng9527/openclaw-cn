@@ -13,10 +13,17 @@ jobs:
       - name: Checkout from Gitee
         run: |
           git clone --depth=1 https://gitee.com/OpenClaw-CN/openclaw-cn.git /tmp/openclaw-cn
+          ls /tmp/openclaw-cn/dist/ | head -3 || echo "dist empty - will build"
       
-      - name: Verify dist exists
+      - name: Install Node deps and build
         run: |
-          ls /tmp/openclaw-cn/dist/ | head -5 || echo "dist not found - will build"
+          cd /tmp/openclaw-cn
+          corepack enable
+          corepack prepare pnpm@9 --activate
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm ui:build
+          ls dist/ | wc -l
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -37,3 +44,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
+          no-cache: true
